@@ -200,7 +200,7 @@ def main():  # Основная функция
         while 0 <= timer3_for_start < 20:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    timer3_for_start = 40
+                    timer3_for_start = "EXIT"
                 horse1.update()
                 horse2.update()
                 horse3.update()
