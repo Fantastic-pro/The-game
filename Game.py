@@ -198,12 +198,9 @@ def main():  # Основная функция
     dt = 0  # Delta time (time since last tick).
     if Menu.flag_of_starting_display:
         while 0 <= timer3_for_start < 20:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    timer3_for_start = "EXIT"
-                horse1.update()
-                horse2.update()
-                horse3.update()
+            horse1.update()
+            horse2.update()
+            horse3.update()
             back_sprites.update()
             all_sprites.update()
             screen.fill(WHITE)
