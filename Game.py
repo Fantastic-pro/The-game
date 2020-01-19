@@ -1,4 +1,5 @@
 import Menu
+
 bypass_pep8 = Menu
 
 
@@ -6,7 +7,7 @@ def main():  # Основная функция
     import random
     import pygame
     import Menu
-    from Constants import WIDTH, HEIGHT, WHITE, BLACK, GREEN,\
+    from Constants import WIDTH, HEIGHT, WHITE, BLACK, GREEN, \
         BLUE, BOT_LEVEL
     import Cut_of_sprites
     pygame.init()
@@ -31,11 +32,12 @@ def main():  # Основная функция
             super().__init__(back_sprites)
             self.frames = []
             self.cut_sheet(sheet, columns, rows)
-            self.cur_frame = random.randint(0, columns*rows-1)
+            self.cur_frame = random.randint(0, columns * rows - 1)
             self.image = self.frames[self.cur_frame]
             self.image = pygame.transform.scale(self.image,
                                                 (self.image.get_width() // 10,
-                                                 self.image.get_height() // 10))
+                                                 self.image.get_height() //
+                                                 10))
             self.rect = self.rect.move(x, y)
 
         def cut_sheet(self, sheet, columns, rows):
@@ -54,17 +56,18 @@ def main():  # Основная функция
                 self.rect.x = 1200 + random.randrange(0, 50)
                 self.rect.y = random.randrange(0, 600)
 
+    # Класс дерева
     class Tree(pygame.sprite.Sprite):
         def __init__(self, sheet, columns, rows, x, y):
             super().__init__(back_sprites)
             self.frames = []
             self.cut_sheet(sheet, columns, rows)
-            self.cur_frame = random.randint(0, columns*rows-1)
+            self.cur_frame = random.randint(0, columns * rows - 1)
             self.image = self.frames[self.cur_frame]
             self.image = pygame.transform.scale(self.image,
                                                 (self.image.get_width() // 5,
-                                                 self.image.get_height()
-                                                 // 5))
+                                                 self.image.get_height() //
+                                                 5))
             self.rect = self.rect.move(x, y)
 
         def cut_sheet(self, sheet, columns, rows):
@@ -76,7 +79,7 @@ def main():  # Основная функция
                     self.frames.append(sheet.subsurface(pygame.Rect(
                         frame_location, self.rect.size)))
 
-        # Функция перемещения камней
+        # Функция перемещения деревьев
         def movee(self, x):
             self.rect.x -= x
             if self.rect.x < -20:
@@ -196,7 +199,6 @@ def main():  # Основная функция
     if Menu.flag_of_starting_display:
         while 0 <= timer3_for_start < 20:
             for event in pygame.event.get():
-
                 if event.type == pygame.QUIT:
                     timer3_for_start = 40
                 horse1.update()
@@ -221,7 +223,7 @@ def main():  # Основная функция
     win = False
     pauza = False
     while running and timer3_for_start <= 0:
-        leader = 0
+        leader = 0  # Координата лидера гонки
         if horse1.rect[0] > leader:
             leader = horse1.rect[0]
         if horse2.rect[0] > leader:
@@ -266,6 +268,7 @@ def main():  # Основная функция
         screen.fill(WHITE)
         back_sprites.draw(screen)
         all_sprites.draw(screen)
+        # Прорисовка дорожек
         pygame.draw.line(screen, BLACK, [0, 60], [1200, 60])
         pygame.draw.line(screen, BLACK, [0, 210], [1200, 210])
         pygame.draw.line(screen, BLACK, [0, 360], [1200, 360])
@@ -273,12 +276,15 @@ def main():  # Основная функция
         pygame.draw.line(screen, BLUE, [start_line, 0], [start_line, 600])
         draw_of_finish(finish_line)
         draw_of_win(count, win)
+        # Остановка забега
         if leader >= 1000:
             pauza = True
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
+            # Выход из забега
             running = False
         if timer1 > 1:
+            # Не вовремя нажата кнопка, лошадь замедляется
             if horse1.uskorenie == 0 and keys[pygame.K_z]:
                 horse1.tormoz()
             if horse2.uskorenie == 0 and keys[pygame.K_v]:
@@ -290,16 +296,21 @@ def main():  # Основная функция
             r_num2 = random.randrange(0, 3)
             r_num3 = random.randrange(0, 3)
             pygame.draw.circle(screen, GREEN, (leader + 150, 30), 25)
+            # Для одного игрока
             if Menu.flag_of_game1:
                 if keys[pygame.K_z]:
+                    # Вовремя нажата кнопка
                     horse1.movee_super()
                     timer1 = random.randrange(3, 5)
                 if r_num2 == 0 and timer1 < BOT_LEVEL:
+                    # Бот нажимает кнопку
                     horse2.movee_super()
                     timer1 = random.randrange(3, 5)
                 if r_num3 == 0 and timer1 < BOT_LEVEL:
+                    # Бот нажимает кнопку
                     horse3.movee_super()
                     timer1 = random.randrange(3, 5)
+            # Для двух игроков
             if Menu.flag_of_game2:
                 if keys[pygame.K_z]:
                     horse1.movee_super()
@@ -310,6 +321,7 @@ def main():  # Основная функция
                 if r_num3 == 0 and timer1 < BOT_LEVEL:
                     horse3.movee_super()
                     timer1 = random.randrange(3, 5)
+            # Для трех игроков
             if Menu.flag_of_game3:
                 if keys[pygame.K_z]:
                     horse1.movee_super()
@@ -321,12 +333,15 @@ def main():  # Основная функция
                     horse3.movee_super()
                     timer1 = random.randrange(3, 5)
         if timer1 <= 0:
+            # Задаем новый таймер для круга
             timer1 = random.randrange(3, 5)
         pygame.display.flip()
         dt = clock.tick(30) / 1000  # / 1000 Перевести в секунды
         start_line = start_line - dt * 100
+        # Перемещение камней и деревьев
         for i in range(len(rocks)):
             rocks[i].movee(dt * 100)
+        # Рисование линии старта
         if finish_line > 0:
             finish_line = finish_line - dt * 100
     pygame.quit()
